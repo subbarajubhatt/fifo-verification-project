@@ -1,101 +1,43 @@
-module fifo_tb;
+# FIFO Design & Verification
 
-reg clk;
-reg reset;
-reg write_en;
-reg read_en;
-reg [7:0] data_in;
-wire [7:0] data_out;
-wire full;
-wire empty;
+## Overview
+This project implements and verifies a FIFO (First In First Out) memory using Verilog and SystemVerilog.
 
-fifo dut (
-    .clk(clk),
-    .reset(reset),
-    .write_en(write_en),
-    .read_en(read_en),
-    .data_in(data_in),
-    .data_out(data_out),
-    .full(full),
-    .empty(empty)
-);
+## Features
+- FIFO depth: 4
+- Data width: 8-bit
+- Write operation
+- Read operation
+- Full and Empty flag handling
 
-always #5 clk = ~clk;
+## Design (RTL)
+The FIFO is implemented using registers with write and read pointers. Data is stored in a memory array and accessed sequentially.
 
-initial begin
-    $dumpfile("dump.vcd");
-  $dumpvars(0, fifo_tb);
+## Verification
+A SystemVerilog testbench is used to:
+- Apply write and read operations
+- Verify data integrity
+- Check full and empty conditions
+- Generate waveform output
 
-    clk = 0;
-    reset = 1;
-    write_en = 0;
-    read_en = 0;
-    data_in = 0;
+## Tools Used
+- Verilog
+- SystemVerilog
+- EDA Playground
+- EPWave (Waveform Viewer)
 
-    #10 reset = 0;
+## Waveform
+![Waveform](waveform.png)
 
-    // Write data
-    write_en = 1;
-    data_in = 8'd10; #10;
-    data_in = 8'd20; #10;
-    data_in = 8'd30; #10;
-    data_in = 8'd40; #10;
-    write_en = 0;
+## Simulation Output
+- Data written: 10, 20, 30, 40
+- Data read: 10, 20, 30, 40
 
-    // Read data
-    read_en = 1; #10;
-    $display("Read Data: %d", data_out);
-    #10;
-    $display("Read Data: %d", data_out);
-    #10;
-    $display("Read Data: %d", data_out);
-    #10;
-    $display("Read Data: %d", data_out);
-    read_en = 0;
+## Skills Demonstrated
+- RTL Design
+- Testbench Development
+- Functional Verification
+- Debugging & Waveform Analysis
 
-    $finish;
-end
-
-endmodule
-
-module fifo (
-    input clk,
-    input reset,
-    input write_en,
-    input read_en,
-    input [7:0] data_in,
-    output reg [7:0] data_out,
-    output full,
-    output empty
-);
-
-reg [7:0] mem [0:3];
-reg [2:0] write_ptr;
-reg [2:0] read_ptr;
-reg [2:0] count;
-
-assign full = (count == 4);
-assign empty = (count == 0);
-
-always @(posedge clk or posedge reset) begin
-    if (reset) begin
-        write_ptr <= 0;
-        read_ptr <= 0;
-        count <= 0;
-        data_out <= 0;
-    end else begin
-        if (write_en && !full) begin
-            mem[write_ptr] <= data_in;
-            write_ptr <= write_ptr + 1;
-            count <= count + 1;
-        end
-
-        if (read_en && !empty) begin
-            data_out <= mem[read_ptr];
-            read_ptr <= read_ptr + 1;
-            count <= count - 1;
-        end
-    end
-end
-
-endmodule
+## Author
+Subba Raju Sarikonda
