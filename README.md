@@ -39,9 +39,9 @@ A SystemVerilog testbench is used to:
 - Functional Verification
 - Debugging & Waveform Analysis
 
-- ## How to Run
+## How to Run
 1. Open EDA Playground
-2. Paste design.sv and testbench.sv
+2. load design.sv and testbench.sv
 3. Select Icarus Verilog
 4. Run simulation
 5. Open EPWave to view waveform
